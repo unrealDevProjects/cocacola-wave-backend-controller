@@ -1,0 +1,26 @@
+<input id="nombre" placeholder="Nombre">
+<input id="telefono" placeholder="Telefono">
+<button onclick="enviar()">Enviar</button>
+
+<script>
+const ws = new WebSocket("ws://192.168.4.109:8081");
+
+ws.onopen = () => console.log("Conectado a WebSocket!");
+ws.onclose = () => console.log("WebSocket cerrado");
+ws.onerror = (e) => console.error("WebSocket error", e);
+
+function enviar() {
+    if (ws.readyState !== WebSocket.OPEN) {
+        console.log("WebSocket no está listo");
+        return;
+    }
+
+    const data = {
+        nombre: document.getElementById("nombre").value,
+        telefono: document.getElementById("telefono").value
+    };
+
+    ws.send(JSON.stringify(data));
+    console.log("Mensaje enviado:", data);
+}
+</script>
