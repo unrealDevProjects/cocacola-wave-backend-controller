@@ -1,26 +1,57 @@
-<input id="nombre" placeholder="Nombre">
-<input id="telefono" placeholder="Telefono">
-<button onclick="enviar()">Enviar</button>
-
-<script>
-const ws = new WebSocket("ws://192.168.4.109:8081");
-
-ws.onopen = () => console.log("Conectado a WebSocket!");
-ws.onclose = () => console.log("WebSocket cerrado");
-ws.onerror = (e) => console.error("WebSocket error", e);
-
-function enviar() {
-    if (ws.readyState !== WebSocket.OPEN) {
-        console.log("WebSocket no está listo");
-        return;
-    }
-
-    const data = {
-        nombre: document.getElementById("nombre").value,
-        telefono: document.getElementById("telefono").value
-    };
-
-    ws.send(JSON.stringify(data));
-    console.log("Mensaje enviado:", data);
-}
-</script>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>OLA KINETICA APP</title>
+    <link
+      rel="stylesheet"
+      href="/css/style.css"
+    />
+  </head>
+  <body>
+    <img
+      src="/assets/logo.png"
+      alt="logo"
+      class="logo"
+    />
+    <form id="form">
+      <div class="inputs-container flex-column">
+        <input
+          id="nombre"
+          placeholder="Nombre"
+          class="input"
+          required
+        />
+        <input
+          id="telefono"
+          placeholder="Telefono"
+          class="input"
+          required
+        />
+        <button
+          type="submit"
+          id="send-button"
+        >
+          Enviar
+        </button>
+      </div>
+    </form>
+    <img
+      src="/assets/balloon.png"
+      alt="decoration"
+      class="balloon"
+    />
+    <div
+      id="state-container"
+      class="state-container"
+    ></div>
+    <script
+      type="module"
+      src="/js/index.js"
+    ></script>
+  </body>
+</html>
