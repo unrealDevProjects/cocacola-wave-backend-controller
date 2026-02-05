@@ -32,11 +32,11 @@ function sendData() {
     return;
   }
 
-  if (ws.readyState !== WebSocket.OPEN) {
+  /*   if (ws.readyState !== WebSocket.OPEN) {
     console.log('WebSocket no está listo');
     printState('WebSocket Error : Check IP', 'error');
     return;
-  }
+  } */
 
   const data = {
     nombre: document.getElementById('nombre').value,
@@ -97,9 +97,14 @@ function isUnique(data) {
 }
 
 function nameValidation(name) {
-  if (/\s{2,}/.test(name)) {
+  // Count total number of spaces in the entire string
+  const spaceCount = (name.match(/ /g) || []).length;
+  
+  // Return false if there are more than 2 spaces in total
+  if (spaceCount > 2) {
     return false;
   }
+  
   return true;
 }
 
