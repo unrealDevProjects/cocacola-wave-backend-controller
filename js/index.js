@@ -5,7 +5,9 @@ const formElement = document.getElementById('form');
 const stateContainerElement = document.getElementById('state-container');
 const sendButtonElement = document.getElementById('send-button');
 const inputElements = document.querySelectorAll('.input');
+const nameInputElement = document.getElementById('name');
 
+const localStorage = window.localStorage;
 let ws = null;
 
 if (!ipToConnect) {
@@ -37,10 +39,11 @@ function sendData() {
   }
 
   const data = {
-    nombre: document.getElementById('nombre').value,
+    nombre: nameInputElement.value,
     telefono: document.getElementById('telefono').value,
   };
 
+  saveDataToLocalStorage(data);
   ws.send(JSON.stringify(data));
   printState('Registro realizado correctamente', 'success');
 }
@@ -48,6 +51,7 @@ function sendData() {
 function printState(state, type) {
   const className = type === 'success' ? 'success' : 'error';
   sendButtonElement.disabled = true;
+  inputElements.forEach((input) => (input.disabled = true));
   stateContainerElement.innerHTML = `
     <p>${type === 'success' ? '✅' : '❌'} ${state}</p>
   `;
@@ -59,8 +63,20 @@ function printState(state, type) {
     stateContainerElement.classList.remove('show');
     stateContainerElement.classList.remove(className);
     sendButtonElement.disabled = false;
+    inputElements.forEach((input) => (input.disabled = false));
     inputElements.forEach((input) => (input.value = ''));
   }, 3000);
+}
+
+function saveDataToLocalStorage(data) {
+  const savedData = getDataFromLocalStorage();
+  savedData.push(data);
+  localStorage.setItem('data', JSON.stringify(savedData));
+}
+
+function getDataFromLocalStorage() {
+  const data = localStorage.getItem('data');
+  return data ? JSON.parse(data) : [];
 }
 
 formElement.addEventListener('submit', (event) => {
