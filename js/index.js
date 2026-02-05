@@ -48,6 +48,11 @@ function sendData() {
     return;
   }
 
+  if (!nameValidation(data.nombre)) {
+    printState('Maximo de 3 palabras por nombre', 'error');
+    return;
+  }
+
   saveDataToLocalStorage(data);
   ws.send(JSON.stringify(data));
   printState('Registro realizado correctamente', 'success');
@@ -90,6 +95,48 @@ function isUnique(data) {
   console.log('Is unique:', unique, 'Phone:', data.telefono);
   return unique;
 }
+
+function nameValidation(name) {
+  if (/\s{2,}/.test(name)) {
+    return false;
+  }
+  return true;
+}
+
+function clearLocalStorage() {
+  if (confirm('¿Estás seguro de que quieres borrar todos los datos?')) {
+    localStorage.clear();
+    printState('LocalStorage borrado correctamente', 'success');
+    console.log('LocalStorage cleared');
+  }
+}
+
+// Settings dropdown functionality
+const settingsButton = document.getElementById('settings-button');
+const settingsDropdown = document.getElementById('settings-dropdown');
+const clearStorageButton = document.getElementById('clear-storage');
+
+// Toggle dropdown
+settingsButton.addEventListener('click', (event) => {
+  event.stopPropagation();
+  settingsDropdown.classList.toggle('show');
+});
+
+// Clear storage action
+clearStorageButton.addEventListener('click', () => {
+  settingsDropdown.classList.remove('show');
+  clearLocalStorage();
+});
+
+// Close dropdown when clicking outside
+document.addEventListener('click', (event) => {
+  if (
+    !settingsButton.contains(event.target) &&
+    !settingsDropdown.contains(event.target)
+  ) {
+    settingsDropdown.classList.remove('show');
+  }
+});
 
 formElement.addEventListener('submit', (event) => {
   event.preventDefault();
