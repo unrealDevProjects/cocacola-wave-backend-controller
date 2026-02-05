@@ -39,9 +39,14 @@ function sendData() {
   }
 
   const data = {
-    nombre: nameInputElement.value,
+    nombre: document.getElementById('nombre').value,
     telefono: document.getElementById('telefono').value,
   };
+
+  if (!isUnique(data)) {
+    printState('El número de teléfono ya está registrado', 'error');
+    return;
+  }
 
   saveDataToLocalStorage(data);
   ws.send(JSON.stringify(data));
@@ -77,6 +82,13 @@ function saveDataToLocalStorage(data) {
 function getDataFromLocalStorage() {
   const data = localStorage.getItem('data');
   return data ? JSON.parse(data) : [];
+}
+
+function isUnique(data) {
+  const savedData = getDataFromLocalStorage();
+  const unique = !savedData.some((item) => item.telefono === data.telefono);
+  console.log('Is unique:', unique, 'Phone:', data.telefono);
+  return unique;
 }
 
 formElement.addEventListener('submit', (event) => {
